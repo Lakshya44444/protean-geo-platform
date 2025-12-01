@@ -1,153 +1,104 @@
-Protean Geo-Analytics Platform 🌍🤖
+# Protean Geo-Analytics Platform
+### A Hybrid Neuro-Symbolic Approach to Seismic Risk Assessment
 
-A Hybrid Neuro-Symbolic Approach to Seismic Risk Assessment
+## From Possibility to Performance
 
-"From Possibility to Performance"
+The Protean Platform is a seismic interpretation tool designed to assess subsurface risk. Instead of relying solely on manual fault detection, this system utilizes an AI co-pilot to quantify risk. The platform combines Generative AI, Graph Theory, and Large Language Models (LLMs) to convert uncertainty into actionable insights.
 
-The Protean Platform represents a paradigm shift in subsurface modeling, evolving from static, deterministic interpretation to a dynamic ecosystem of probabilistic risk assessment. Acting as an AI-powered co-pilot for geologists, it synergizes the creative power of Generative AI, the structural reasoning of Graph Theory, and the interpretive capabilities of Large Language Models to quantify uncertainty in high-stakes geotechnical environments.
+## Project Overview
 
-🚀 Project Overview
+In Geotechnical Engineering, traditional seismic data interpretation is often manual, subjective, and slow. Standard maps typically identify where a fault is located but fail to predict if it presents a leakage risk.
 
-In the domain of Geotechnical Engineering, the conventional workflow for seismic interpretation remains heavily reliant on manual, subjective analysis. This traditional approach often results in static geological models that tell us where a fault might be located geographically, but fail to quantify how risky that structure is in terms of fluid migration and seal integrity.
+The Protean Solution automates this process using three distinct AI agents that handle visual recognition, mathematical analysis, and textual reporting.
 
-The Protean Solution addresses this critical gap by automating the entire interpretation-to-analysis pipeline. It deploys three specialized, interoperable AI agents that mirror the cognitive workflow of a human expert team:
+## System Architecture
 
+The platform consists of three integrated modules:
 
+| Module | Name | Role | Tech Stack | Function |
+| :--- | :--- | :--- | :--- | :--- |
+| **Module 1** | **REE** | Visual Extraction | Attention U-Net (PyTorch) | Generates detailed fault maps, effectively handling noisy data. |
+| **Module 2** | **GPP** | Structural Analysis | Graph Attention Network (PyG) | Calculates connectivity to determine leakage risks. |
+| **Module 3** | **MAIA** | Reporting | Gemini API (LLM) | Converts complex mathematical metrics into readable reports. |
 
-### 🧠 System Architecture: The "Triad" Approach
+## Methodology
 
-| Module Name | The Metaphor | Tech Stack | Core Function |
+The system processes raw seismic data into insights through the following pipeline:
+
+### 1. The Reality Ensemble Engine (REE)
+REE functions as the vision expert, designed to identify features in noisy data.
+
+* **Input:** A slice of 2D Seismic Amplitude (derived from a 3D volume).
+* **Model:** A modified U-Net utilizing Attention Gates.
+* **Mechanism:** Since seismic data contains significant background noise (approximately 90%), standard CNNs often struggle. Attention Gates force the model to focus specifically on fault features.
+* **Output:** A binary map indicating fault locations.
+
+### 2. The Graph Property Predictor (GPP)
+GPP analyzes the connectivity of the identified faults.
+
+* **Transformation:** The system converts fault lines from the visual map into a network graph.
+* **Nodes & Edges:** Fault lines serve as nodes, while their intersections/connections serve as edges.
+* **Model:** A Graph Attention Network (GAT). This model weighs neighbor importance to identify flow paths.
+* **Prediction:** It classifies the network as High Risk (leakage likely) or Low Risk (sealing) based on vertical connectivity.
+
+### 3. The Multimodal AI Analyst (MAIA)
+MAIA synthesizes the data into a natural language report.
+
+* **Integration:** Risk scores and connectivity metrics are aggregated into a JSON file.
+* **Reasoning:** The system uses Retrieval Augmented Generation (RAG) powered by the Gemini 1.5 Pro API.
+* **Prompting:** The LLM acts as a Senior Geophysicist, analyzing connectivity numbers to assess leakage risks.
+* **Output:** A comprehensive written report with actionable advice.
+
+## Dataset
+
+This project utilizes the industrial-grade Gullfaks Field Dataset from the North Sea.
+
+| Data Type | Source Format | Role | Pre-processing |
 | :--- | :--- | :--- | :--- |
-| **Module 1: REE** | 🎨 **The Artist** | **Attention U-Net** (PyTorch) | **Visualizes:** Generates high-fidelity fault maps from noisy seismic data. |
-| **Module 2: GPP** | 👷 **The Engineer** | **Graph Attention Network** (PyG) | **Calculates:** Simulates physical connectivity to predict leakage risk. |
-| **Module 3: MAIA** | 📊 **The Analyst** | **Gemini API** (LLM) | **Explains:** Interprets risk metrics into natural language reports. |
+| **3D Seismic Volume** | .segy | Primary Input (X) | Sliced into 128x128 2D patches for training. |
+| **Fault Sticks** | ASCII | Target Labels (Y) | Vector lines converted to pixel masks. |
+| **Well Logs** | .las | Lithology Stats | K-Means clustering used to determine rock types (Sand vs. Shale). |
 
-🛠️ Methodology & Technical Details
+## Installation and Usage
 
-Our pipeline transforms raw, unstructured seismic data into actionable risk insights through a rigorous, multi-stage process designed to handle real-world industrial complexity:
+### Prerequisites
+* Python 3.8 or newer
+* NVIDIA GPU (Recommended for training)
 
-1. The Reality Ensemble Engine (REE)
+### Setup
 
-The REE serves as the vision core of the platform. It addresses the challenge of identifying subtle geological features within inherently noisy seismic volumes.
+1.  **Clone the Repository**
+    ```bash
+    git clone [https://github.com/Lakshya44444/protean-geo-platform.git](https://github.com/Lakshya44444/protean-geo-platform.git)
+    cd protean-geo-platform
+    ```
 
-Input: 2D Seismic Amplitude Slice (extracted from 3D SEGY Volume).
+2.  **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-Model: A modified U-Net architecture enhanced with Attention Gates.
+3.  **Run the Application**
+    Launch the Streamlit dashboard:
+    ```bash
+    streamlit run app.py
+    ```
 
-Why Attention? Seismic data is typically >90% background noise and geological strata that are irrelevant to fault detection. Standard CNNs often "get distracted" by these textures. 
+## Roadmap
 
- Attention Gates introduce a learnable weighting mechanism that forces the model to suppress irrelevant regions and focus gradients exclusively on the structural discontinuities (the signal), significantly improving segmentation accuracy in low-quality data.
+* [x] **Week 1:** Data pipeline implementation (SEGY slicing).
+* [x] **Week 1:** Graph Construction algorithm development.
+* [ ] **Week 2:** Training Attention U-Net on Gullfaks data.
+* [ ] **Week 3:** Integration of Gemini API for reasoning and reporting.
+* [ ] **Week 4:** Deployment to Streamlit Cloud.
 
-Output: A precise binary probability mask delineating the fault structure.
+## References
 
-2. The Graph Property Predictor (GPP)
+* **Liu et al. (2021):** Attention-Based 3-D Seismic Fault Segmentation.
+* **Li et al. (2024):** Graph Network Surrogate Model for Subsurface Flow.
+* **Zhang et al. (2024):** When Geoscience Meets Generative AI.
 
-The GPP is the physics-aware engine that moves beyond simple image recognition to understand topological relationships.
+## Author
 
-Transformation: We employ a custom Image-to-Graph algorithm to skeletonize the predicted fault mask into a formal topological graph structure.
-
-Nodes: represent discrete fault segments and critical intersections.
-
-Edges: represent the physical connectivity and transmissibility between these segments.
-
-Model: A Graph Attention Network (GAT) that processes this graph structure. Unlike standard Graph Convolutional Networks (GCNs), the GAT applies an attention mechanism to weigh the importance of neighboring nodes, allowing it to identify critical flow pathways. It classifies the entire graph structure as "Leaking" (High Risk) or "Sealing" (Low Risk) based on vertical connectivity rules that simulate fluid migration potential.
-
-3. The Multimodal AI Analyst (MAIA)
-
-MAIA acts as the reasoning layer, translating abstract mathematical outputs into human-readable intelligence.
-
-Integration: The probabilistic risk scores and connectivity metrics from the GPP are aggregated and converted into a structured JSON payload.
-
-Reasoning: We utilize a Retrieval Augmented Generation (RAG) framework powered by the Gemini 1.5 Pro API.
-
-System Prompt: The model is primed with a specialized persona: "Act as a Senior Geophysicist. Analyze the following connectivity metrics and provide a comprehensive risk assessment, highlighting potential leakage pathways between the reservoir and overburden..."
-
-Output: A detailed text-based strategic report that provides context, interpretation, and actionable recommendations for the user.
-
-📂 Data Ecosystem
-
-To ensure the system is robust and applicable to real-world scenarios, we utilize the industrial-grade Gullfaks Field Dataset from the North Sea, a standard benchmark for complex structural geology.
-
-Data Type
-
-Source Format
-
-Role in Project
-
-Key Transformation
-
-3D Seismic Volume
-
-.segy
-
-Primary Input ($X$)
-
-The raw 3D volume is sliced into 2D patches ($128 \times 128$) to create a manageable training set for the vision model.
-
-Fault Sticks
-
-ASCII
-
-Ground Truth Labels ($Y$)
-
-Vector fault interpretations are rasterized into binary masks to serve as pixel-perfect training targets.
-
-Well Logs
-
-.las
-
-Lithology Features
-
-Gamma Ray and Porosity logs are processed using K-Means clustering to classify rock types (Sand/Shale) for graph node attribution.
-
-Access the Dataset Here
-
-💻 Installation & Usage
-
-Prerequisites
-
-Python 3.8+
-
-NVIDIA GPU (Recommended for training)
-
-1. Clone the Repository
-
-git clone [https://github.com/Lakshya44444/protean-geo-platform.git](https://github.com/Lakshya44444/protean-geo-platform.git)
-cd protean-geo-platform
-
-
-2. Install Dependencies
-
-pip install -r requirements.txt
-
-
-3. Run the Demo App
-
-Launch the Streamlit dashboard to test the pipeline:
-
-streamlit run app.py
-
-
-🧪 Current Status (Roadmap)
-
-[x] Week 1: Data Engineering pipeline (SEGY slicing) complete.
-
-[x] Week 1: Graph Construction algorithm (Image-to-Graph) implemented.
-
-[ ] Week 2: Training the Attention U-Net on Gullfaks data.
-
-[ ] Week 3: Integrating the Gemini API for reasoning.
-
-[ ] Week 4: Final Deployment on Streamlit Cloud.
-
-📚 References
-
-Liu et al. (2021): Attention-Based 3-D Seismic Fault Segmentation. (Theoretical Basis for Vision Model).
-
-Li et al. (2024): Graph Network Surrogate Model for Subsurface Flow. (Theoretical Basis for Physics Model).
-
-Zhang et al. (2024): When Geoscience Meets Generative AI. (Theoretical Basis for LLM Integration).I
-
-👨‍💻 Author
-
-**Lakshya Gupta
+**Lakshya Gupta**
+Sophomore, Geological Technology, IIT Roorkee

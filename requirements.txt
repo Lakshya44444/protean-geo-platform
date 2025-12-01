@@ -1,0 +1,9 @@
+torch
+torch-geometric
+segyio
+numpy
+matplotlib
+scikit-image
+streamlit
+networkx
+google-generativeai
